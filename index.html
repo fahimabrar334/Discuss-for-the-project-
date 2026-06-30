@@ -18,7 +18,7 @@ font-family:Arial;
 
 body{
 height:100vh;
-background:#0f172a; /* professional dark background */
+background:#0f172a;
 color:white;
 }
 
@@ -75,11 +75,10 @@ width:100%;
 padding:12px;
 border:none;
 border-radius:10px;
-background:#2563eb; /* strong professional blue */
+background:#2563eb;
 color:white;
 cursor:pointer;
 font-weight:bold;
-transition:0.2s;
 }
 
 button:hover{
@@ -96,15 +95,13 @@ flex-direction:column;
 
 .header{
 background:#111827;
-color:#22c55e; /* aggressive green highlight */
+color:#22c55e;
 padding:18px;
 font-weight:bold;
 border-bottom:2px solid #22c55e;
 font-size:15px;
-letter-spacing:0.5px;
 }
 
-/* conversation name style */
 #showName{
 color:#60a5fa;
 font-weight:bold;
@@ -122,25 +119,22 @@ gap:10px;
 background:#0f172a;
 }
 
-/* message bubble */
+/* WhatsApp-like message */
 .msg{
 background:#1f2937;
 padding:10px 12px;
 border-radius:12px;
 max-width:70%;
-align-self:flex-start;
 border-left:3px solid #22c55e;
 font-size:14px;
 }
 
-/* sender name */
 .msg b{
 display:block;
 margin-bottom:3px;
 color:#22c55e;
-font-size:13px;
 text-transform:uppercase;
-letter-spacing:0.5px;
+font-size:13px;
 }
 
 .send{
@@ -156,9 +150,6 @@ flex:1;
 margin:0;
 border-radius:20px;
 padding:10px 15px;
-background:#0b1220;
-color:white;
-border:1px solid #374151;
 }
 
 .send button{
@@ -169,6 +160,11 @@ background:#22c55e;
 
 .send button:hover{
 background:#16a34a;
+}
+
+small{
+color:#9ca3af;
+font-size:10px;
 }
 
 </style>
@@ -216,10 +212,15 @@ GROUP CHAT • USER:
 
 </div>
 
+<!-- SOCKET.IO -->
+<script src="/socket.io/socket.io.js"></script>
+
 <script>
 
-let user="";
+const socket = io();
+let user = "";
 
+// login
 function enterChat(){
 
 user = document.getElementById("username").value.trim();
@@ -233,23 +234,43 @@ document.getElementById("home").style.display="none";
 document.getElementById("chat").style.display="flex";
 
 document.getElementById("showName").innerText = user;
-
 }
 
+// send message
 function send(){
 
 let text = document.getElementById("message").value;
 
 if(text==="") return;
 
-document.getElementById("messages").innerHTML += `
-<div class="msg">
-<b>${user}</b>
-${text}
-</div>
-`;
+socket.emit("sendMessage", {
+user: user,
+text: text
+});
 
 document.getElementById("message").value="";
+}
+
+// receive messages history
+socket.on("loadMessages", (msgs) => {
+msgs.forEach(addMessage);
+});
+
+// receive new messages
+socket.on("newMessage", (msg) => {
+addMessage(msg);
+});
+
+// show message
+function addMessage(msg){
+
+document.getElementById("messages").innerHTML += `
+<div class="msg">
+<b>${msg.user}</b>
+${msg.text}<br>
+<small>${msg.time}</small>
+</div>
+`;
 
 }
 
