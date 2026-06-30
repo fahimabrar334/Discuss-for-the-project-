@@ -1,9 +1,259 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>Discuss</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Group Chat</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
+height:100vh;
+background:#0f172a; /* professional dark background */
+color:white;
+}
+
+/* LOGIN */
+
+#home{
+height:100%;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+.card{
+background:#111827;
+padding:40px;
+width:350px;
+border-radius:16px;
+text-align:center;
+box-shadow:0 15px 40px rgba(0,0,0,.6);
+border:1px solid #1f2937;
+}
+
+.card img{
+width:85px;
+height:85px;
+margin-bottom:15px;
+}
+
+h1{
+margin-bottom:20px;
+font-size:18px;
+color:#e5e7eb;
+}
+
+.quote{
+color:#9ca3af;
+margin-bottom:25px;
+font-size:14px;
+}
+
+input{
+width:100%;
+padding:12px;
+margin-bottom:15px;
+border:1px solid #374151;
+border-radius:10px;
+background:#0b1220;
+color:white;
+outline:none;
+}
+
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:10px;
+background:#2563eb; /* strong professional blue */
+color:white;
+cursor:pointer;
+font-weight:bold;
+transition:0.2s;
+}
+
+button:hover{
+background:#1d4ed8;
+}
+
+/* CHAT */
+
+#chat{
+display:none;
+height:100%;
+flex-direction:column;
+}
+
+.header{
+background:#111827;
+color:#22c55e; /* aggressive green highlight */
+padding:18px;
+font-weight:bold;
+border-bottom:2px solid #22c55e;
+font-size:15px;
+letter-spacing:0.5px;
+}
+
+/* conversation name style */
+#showName{
+color:#60a5fa;
+font-weight:bold;
+margin-left:8px;
+text-transform:uppercase;
+}
+
+.messages{
+height:75vh;
+overflow:auto;
+padding:20px;
+display:flex;
+flex-direction:column;
+gap:10px;
+background:#0f172a;
+}
+
+/* message bubble */
+.msg{
+background:#1f2937;
+padding:10px 12px;
+border-radius:12px;
+max-width:70%;
+align-self:flex-start;
+border-left:3px solid #22c55e;
+font-size:14px;
+}
+
+/* sender name */
+.msg b{
+display:block;
+margin-bottom:3px;
+color:#22c55e;
+font-size:13px;
+text-transform:uppercase;
+letter-spacing:0.5px;
+}
+
+.send{
+display:flex;
+padding:10px;
+gap:10px;
+background:#111827;
+border-top:1px solid #374151;
+}
+
+.send input{
+flex:1;
+margin:0;
+border-radius:20px;
+padding:10px 15px;
+background:#0b1220;
+color:white;
+border:1px solid #374151;
+}
+
+.send button{
+width:90px;
+border-radius:20px;
+background:#22c55e;
+}
+
+.send button:hover{
+background:#16a34a;
+}
+
+</style>
+
 </head>
+
 <body>
-<h1>Welcome to Discuss Chat</h1>
+
+<div id="home">
+
+<div class="card">
+
+<img src="https://cdn-icons-png.flaticon.com/512/733/733585.png">
+
+<h1>True success is the quiet satisfaction of knowing you did your best.</h1>
+
+<div class="quote">
+Failure is the pillar of success
+</div>
+
+<input id="username" placeholder="Enter your name">
+
+<button onclick="enterChat()">Go to Group Chat</button>
+
+</div>
+
+</div>
+
+<div id="chat">
+
+<div class="header">
+GROUP CHAT • USER:
+<span id="showName"></span>
+</div>
+
+<div class="messages" id="messages"></div>
+
+<div class="send">
+
+<input id="message" placeholder="Write message">
+
+<button onclick="send()">Send</button>
+
+</div>
+
+</div>
+
+<script>
+
+let user="";
+
+function enterChat(){
+
+user = document.getElementById("username").value.trim();
+
+if(user===""){
+alert("Enter name");
+return;
+}
+
+document.getElementById("home").style.display="none";
+document.getElementById("chat").style.display="flex";
+
+document.getElementById("showName").innerText = user;
+
+}
+
+function send(){
+
+let text = document.getElementById("message").value;
+
+if(text==="") return;
+
+document.getElementById("messages").innerHTML += `
+<div class="msg">
+<b>${user}</b>
+${text}
+</div>
+`;
+
+document.getElementById("message").value="";
+
+}
+
+</script>
+
 </body>
 </html>
